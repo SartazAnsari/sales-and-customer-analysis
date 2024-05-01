@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS customer_tbl (
 
 -- LOADING DATA INTO TABLES --
 
-LOAD DATA INFILE 'D:/ProgramData/MySQL/MySQL Server 8.3/Uploads/sales_data.csv'
+LOAD DATA INFILE 'D:\\ProgramData\\MySQL\\MySQL Server 8.3\\Uploads\\Sales and Customer dataset\\sales_data.csv'
 	INTO TABLE sales_tbl
 	FIELDS TERMINATED BY ','
 	OPTIONALLY ENCLOSED BY '"'
@@ -39,7 +39,7 @@ LOAD DATA INFILE 'D:/ProgramData/MySQL/MySQL Server 8.3/Uploads/sales_data.csv'
 	(invoice_no, customer_id, @category, quantity, price, invoice_date, shopping_mall)
 	SET category = IF(@category = 'NULL' OR @category = '', NULL, @category);
 
-LOAD DATA INFILE 'D:/ProgramData/MySQL/MySQL Server 8.3/Uploads/customer_data.csv'
+LOAD DATA INFILE 'D:\\ProgramData\\MySQL\\MySQL Server 8.3\\Uploads\\Sales and Customer dataset\\customer_data.csv'
 	INTO TABLE customer_tbl
 	FIELDS TERMINATED BY ','
 	OPTIONALLY ENCLOSED BY '"'
