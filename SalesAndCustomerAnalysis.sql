@@ -54,6 +54,7 @@ LOAD DATA INFILE 'D:\\ProgramData\\MySQL\\MySQL Server 8.3\\Uploads\\Sales and C
 
 
 -- EXPLORATORY DATA ANALYSIS --
+
 SELECT * FROM sales_tbl LIMIT 100;
 SELECT * FROM customer_tbl LIMIT 100;
 
