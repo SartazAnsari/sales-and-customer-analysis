@@ -8,7 +8,7 @@ USE shopping_mall_db;
 
 -- CREATING TABLES --
 
-CREATE TABLE IF NOT EXISTS sales_tbl (
+CREATE TABLE IF NOT EXISTS shopping_mall_db.sales_tbl (
 	invoice_no VARCHAR(255)
     , customer_id VARCHAR(255)
     , category VARCHAR(255)
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS sales_tbl (
     , shopping_mall VARCHAR(255)
 );
 
-CREATE TABLE IF NOT EXISTS customer_tbl (
+CREATE TABLE IF NOT EXISTS shopping_mall_db.customer_tbl (
 	customer_id VARCHAR(255)
     , gender VARCHAR(255)
     , age INT
@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS customer_tbl (
 -- LOADING DATA INTO TABLES --
 
 LOAD DATA INFILE 'D:\\ProgramData\\MySQL\\MySQL Server 8.3\\Uploads\\Sales and Customer dataset\\sales_data.csv'
-	INTO TABLE sales_tbl
+	INTO TABLE shopping_mall_db.sales_tbl
 	FIELDS TERMINATED BY ','
 	OPTIONALLY ENCLOSED BY '"'
 	LINES TERMINATED BY '\n'
@@ -40,7 +40,7 @@ LOAD DATA INFILE 'D:\\ProgramData\\MySQL\\MySQL Server 8.3\\Uploads\\Sales and C
 	SET category = IF(@category = 'NULL' OR @category = '', NULL, @category);
 
 LOAD DATA INFILE 'D:\\ProgramData\\MySQL\\MySQL Server 8.3\\Uploads\\Sales and Customer dataset\\customer_data.csv'
-	INTO TABLE customer_tbl
+	INTO TABLE shopping_mall_db.customer_tbl
 	FIELDS TERMINATED BY ','
 	OPTIONALLY ENCLOSED BY '"'
 	LINES TERMINATED BY '\n'
@@ -55,15 +55,15 @@ LOAD DATA INFILE 'D:\\ProgramData\\MySQL\\MySQL Server 8.3\\Uploads\\Sales and C
 
 -- EXPLORATORY DATA ANALYSIS --
 
-SELECT * FROM sales_tbl LIMIT 100;
-SELECT * FROM customer_tbl LIMIT 100;
+SELECT * FROM shopping_mall_db.sales_tbl LIMIT 100;
+SELECT * FROM shopping_mall_db.customer_tbl LIMIT 100;
 
 
 -- total revenue of shopping malls
 
 SELECT
 	sum(quantity * price) AS total_revenue
-FROM sales_tbl;
+FROM shopping_mall_db.sales_tbl;
 
 
 -- total revenue by shopping malls
@@ -72,7 +72,7 @@ SELECT
 	shopping_mall
 	, sum(quantity * price) AS total_revenue
     , round(sum(quantity * price)/sum(sum(quantity * price)) OVER() * 100, 2) AS revenue_percentage
-FROM sales_tbl
+FROM shopping_mall_db.sales_tbl
 GROUP BY 
 	shopping_mall
 ORDER BY
@@ -85,7 +85,7 @@ SELECT
 	category
     , sum(quantity * price) AS total_revenue
     , round(sum(quantity * price)/sum(sum(quantity * price)) OVER() * 100, 2) AS revenue_percentage
-FROM sales_tbl
+FROM shopping_mall_db.sales_tbl
 GROUP BY
 	category
 ORDER BY
@@ -98,8 +98,8 @@ SELECT
 	c.gender
     , sum(s.quantity * s.price) AS total_revenue
     , round(sum(quantity * price)/sum(sum(quantity * price)) OVER() * 100, 2) AS revenue_percentage
-FROM sales_tbl s
-	JOIN customer_tbl c ON c.customer_id = s.customer_id
+FROM shopping_mall_db.sales_tbl s
+	JOIN shopping_mall_db.customer_tbl c ON c.customer_id = s.customer_id
 GROUP BY
 	c.gender
 ORDER BY
@@ -112,8 +112,8 @@ SELECT
 	c.age
     , sum(s.quantity * s.price) AS total_revenue
     , round(sum(quantity * price)/sum(sum(quantity * price)) OVER() * 100, 2) AS revenue_percentage
-FROM sales_tbl s
-	JOIN customer_tbl c ON c.customer_id = s.customer_id
+FROM shopping_mall_db.sales_tbl s
+	JOIN shopping_mall_db.customer_tbl c ON c.customer_id = s.customer_id
 GROUP BY
 	c.age
 ORDER BY
@@ -126,8 +126,8 @@ SELECT
 	c.payment_method
     , sum(s.quantity * s.price) AS total_revenue
     , round(sum(quantity * price)/sum(sum(quantity * price)) OVER() * 100, 2) AS revenue_percentage
-FROM sales_tbl s
-	JOIN customer_tbl c ON c.customer_id = s.customer_id
+FROM shopping_mall_db.sales_tbl s
+	JOIN shopping_mall_db.customer_tbl c ON c.customer_id = s.customer_id
 GROUP BY
 	c.payment_method
 ORDER BY
@@ -138,7 +138,7 @@ ORDER BY
 
 SELECT
 	sum(quantity * price)/(count(DISTINCT shopping_mall)) AS avg_sales
-FROM sales_tbl;
+FROM shopping_mall_db.sales_tbl;
 
 
 -- avg sales by shopping malls
@@ -146,7 +146,7 @@ FROM sales_tbl;
 SELECT
 	shopping_mall
 	, sum(quantity * price)/(count(DISTINCT invoice_no)) AS avg_sales
-FROM sales_tbl
+FROM shopping_mall_db.sales_tbl
 GROUP BY 
 	shopping_mall
 ORDER BY
@@ -158,7 +158,7 @@ ORDER BY
 SELECT
 	category
 	, sum(quantity * price)/(count(DISTINCT invoice_no)) AS avg_sales
-FROM sales_tbl
+FROM shopping_mall_db.sales_tbl
 GROUP BY 
 	category
 ORDER BY
@@ -170,8 +170,8 @@ ORDER BY
 SELECT
 	c.gender
     , sum(s.quantity * s.price)/count(DISTINCT s.invoice_no) AS avg_sales
-FROM sales_tbl s
-	JOIN customer_tbl c ON c.customer_id = s.customer_id
+FROM shopping_mall_db.sales_tbl s
+	JOIN shopping_mall_db.customer_tbl c ON c.customer_id = s.customer_id
 GROUP BY
 	c.gender
 ORDER BY
@@ -183,8 +183,8 @@ ORDER BY
 SELECT
 	c.age
     , sum(s.quantity * s.price)/count(DISTINCT s.invoice_no) AS avg_sales
-FROM sales_tbl s
-	JOIN customer_tbl c ON c.customer_id = s.customer_id
+FROM shopping_mall_db.sales_tbl s
+	JOIN shopping_mall_db.customer_tbl c ON c.customer_id = s.customer_id
 GROUP BY
 	c.age
 ORDER BY
@@ -196,8 +196,8 @@ ORDER BY
 SELECT
 	c.payment_method
     , sum(s.quantity * s.price)/count(DISTINCT s.invoice_no) AS avg_sales
-FROM sales_tbl s
-	JOIN customer_tbl c ON c.customer_id = s.customer_id
+FROM shopping_mall_db.sales_tbl s
+	JOIN shopping_mall_db.customer_tbl c ON c.customer_id = s.customer_id
 GROUP BY
 	c.payment_method
 ORDER BY
@@ -209,7 +209,7 @@ ORDER BY
 SELECT
 	extract(YEAR FROM invoice_date) AS time
     , sum(quantity * price) AS total_sales
-FROM sales_tbl
+FROM shopping_mall_db.sales_tbl
 GROUP BY
 	year
 ORDER BY
@@ -221,7 +221,7 @@ ORDER BY
 SELECT
 	date_format(invoice_date, '%Y-%m') AS time
 	, sum(quantity * price) AS total_sales
-FROM sales_tbl
+FROM shopping_mall_db.sales_tbl
 GROUP BY
 	time
 ORDER BY
@@ -235,8 +235,8 @@ SELECT
     , s.shopping_mall
     , sum(quantity * price) AS total_sales
     , round(sum(quantity * price)/sum(sum(quantity * price)) OVER(PARTITION BY date_format(invoice_date, '%Y-%m')) * 100, 2) AS sales_percentage
-FROM sales_tbl s
-	JOIN customer_tbl c ON c.customer_id = s.customer_id
+FROM shopping_mall_db.sales_tbl s
+	JOIN shopping_mall_db.customer_tbl c ON c.customer_id = s.customer_id
 GROUP BY
 	time
     , s.shopping_mall
@@ -251,8 +251,8 @@ SELECT
     , c.gender
     , sum(s.quantity * s.price) AS total_sales
     , round(sum(quantity * price)/sum(sum(quantity * price)) OVER(PARTITION BY date_format(invoice_date, '%Y-%m')) * 100, 2) AS sales_percentage
-FROM sales_tbl s
-	JOIN customer_tbl c ON c.customer_id = s.customer_id
+FROM shopping_mall_db.sales_tbl s
+	JOIN shopping_mall_db.customer_tbl c ON c.customer_id = s.customer_id
 GROUP BY
 	time
     , c.gender
@@ -267,8 +267,8 @@ SELECT
     , c.payment_method
     , sum(s.quantity * s.price) AS total_sales
     , round(sum(quantity * price)/sum(sum(quantity * price)) OVER(PARTITION BY date_format(invoice_date, '%Y-%m')) * 100, 2) AS sales_percentage
-FROM sales_tbl s
-	JOIN customer_tbl c ON c.customer_id = s.customer_id
+FROM shopping_mall_db.sales_tbl s
+	JOIN shopping_mall_db.customer_tbl c ON c.customer_id = s.customer_id
 GROUP BY
 	time
     , c.payment_method
@@ -283,8 +283,8 @@ SELECT
     , s.shopping_mall
     , sum(quantity * price) AS total_sales
     , round(sum(quantity * price)/sum(sum(quantity * price)) OVER(PARTITION BY dayname(invoice_date)) * 100, 2) AS sales_percentage
-FROM sales_tbl s
-	JOIN customer_tbl c ON c.customer_id = s.customer_id
+FROM shopping_mall_db.sales_tbl s
+	JOIN shopping_mall_db.customer_tbl c ON c.customer_id = s.customer_id
 GROUP BY
 	dayofweek(s.invoice_date)
 	, day
@@ -301,8 +301,8 @@ SELECT
     , s.category
     , sum(quantity * price) AS total_sales
     , round(sum(quantity * price)/sum(sum(quantity * price)) OVER(PARTITION BY dayname(invoice_date)) * 100, 2) AS sales_percentage
-FROM sales_tbl s
-	JOIN customer_tbl c ON c.customer_id = s.customer_id
+FROM shopping_mall_db.sales_tbl s
+	JOIN shopping_mall_db.customer_tbl c ON c.customer_id = s.customer_id
 GROUP BY
 	dayofweek(s.invoice_date)
 	, day
@@ -319,8 +319,8 @@ SELECT
     , c.gender
     , sum(quantity * price) AS total_sales
     , round(sum(quantity * price)/sum(sum(quantity * price)) OVER(PARTITION BY dayname(invoice_date)) * 100, 2) AS sales_percentage
-FROM sales_tbl s
-	JOIN customer_tbl c ON c.customer_id = s.customer_id
+FROM shopping_mall_db.sales_tbl s
+	JOIN shopping_mall_db.customer_tbl c ON c.customer_id = s.customer_id
 GROUP BY
 	dayofweek(s.invoice_date)
 	, day
@@ -337,8 +337,8 @@ SELECT
     , c.payment_method
     , sum(quantity * price) AS total_sales
     , round(sum(quantity * price)/sum(sum(quantity * price)) OVER(PARTITION BY dayname(invoice_date)) * 100, 2) AS sales_percentage
-FROM sales_tbl s
-	JOIN customer_tbl c ON c.customer_id = s.customer_id
+FROM shopping_mall_db.sales_tbl s
+	JOIN shopping_mall_db.customer_tbl c ON c.customer_id = s.customer_id
 GROUP BY
 	dayofweek(s.invoice_date)
 	, day
@@ -352,7 +352,7 @@ ORDER BY
 
 SELECT
 	count(DISTINCT customer_id) AS total_customers
-FROM customer_tbl;
+FROM shopping_mall_db.customer_tbl;
 
 
 -- top 5 customers
@@ -362,8 +362,8 @@ SELECT
     , c.gender
     , c.age
     , sum(s.quantity * s.price) AS total_purchase
-FROM sales_tbl s
-    JOIN customer_tbl c ON c.customer_id = s.customer_id
+FROM shopping_mall_db.sales_tbl s
+    JOIN shopping_mall_db.customer_tbl c ON c.customer_id = s.customer_id
 GROUP BY
 	s.customer_id
     , c.gender
@@ -380,8 +380,8 @@ SELECT
     , c.gender
     , c.age
     , sum(s.quantity * s.price) AS total_purchase
-FROM sales_tbl s
-    JOIN customer_tbl c ON c.customer_id = s.customer_id
+FROM shopping_mall_db.sales_tbl s
+    JOIN shopping_mall_db.customer_tbl c ON c.customer_id = s.customer_id
 GROUP BY
 	s.customer_id
     , c.gender
@@ -398,8 +398,8 @@ SELECT
     , AVG(c.age) AS avg_age
     , COUNT(DISTINCT s.customer_id) AS total_customers
     , SUM(s.quantity * s.price) AS total_spent
-FROM sales_tbl s
-	JOIN customer_tbl c ON s.customer_id = c.customer_id
+FROM shopping_mall_db.sales_tbl s
+	JOIN shopping_mall_db.customer_tbl c ON s.customer_id = c.customer_id
 GROUP BY 
 	c.gender
 ORDER BY
