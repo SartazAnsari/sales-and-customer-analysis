@@ -394,12 +394,12 @@ LIMIT 5;
 -- customer demographics with their spendings
 
 SELECT 
-    c.gender,
-    AVG(c.age) AS avg_age,
-    COUNT(DISTINCT s.customer_id) AS total_customers,
-    SUM(s.quantity * s.price) AS total_spent
+    c.gender
+    , AVG(c.age) AS avg_age
+    , COUNT(DISTINCT s.customer_id) AS total_customers
+    , SUM(s.quantity * s.price) AS total_spent
 FROM sales_tbl s
-JOIN customer_tbl c ON s.customer_id = c.customer_id
+	JOIN customer_tbl c ON s.customer_id = c.customer_id
 GROUP BY 
 	c.gender
 ORDER BY
